@@ -74,6 +74,10 @@ def collect_data():
                 # Frame Preprocessing
             frame = cv2.flip(frame, 1)
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+            timestamp_ms = int(cv2.getTickCount() / cv2.getTickFrequency() * 1000)
+            landmarker.detect_async(mp_image, timestamp_ms)
+
             # Landmark Extraction Logic
             current_landmarks = None
             result = latest_result["result"]
@@ -120,9 +124,8 @@ def collect_data():
             df.to_csv(CSV_PATH, index=False)
 
         print(f"\nSuccessfully saved {len(df)} samples to {CSV_PATH}")
-
-    if __name__ == '__main__':
-        collect_data()
+if __name__ == '__main__':
+    collect_data()
 
 
 
