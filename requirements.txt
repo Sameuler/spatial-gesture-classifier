@@ -2,3 +2,5 @@ numpy
 pandas
 mediapipe
 opencv-python
+joblib
+scikit-learn
