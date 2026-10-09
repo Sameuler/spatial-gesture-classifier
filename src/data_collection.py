@@ -103,6 +103,7 @@ def collect_data():
             if key == ord('q'):
                 break
             elif ord('0') <= key <= ord('9'):
+                #Labels=> 0=OpenHand, 1= Index Pointing, 2= Peace Sign, 3= Ok Sign, 4= Thumbs Up,5= Fist
                 label = chr(key)
                 if current_landmarks is not None:
                     # Append landmark vector + label
