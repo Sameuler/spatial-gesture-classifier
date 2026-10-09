@@ -71,64 +71,64 @@ def load_data():
 
 
 #Training
+def train():
+    X_raw, y = load_data()
 
-X_raw, y = load_data()
+    #Normalize
 
-#Normalize
+    print('Normalizing data...')
+    X_norm = normalize_dataset(X_raw)
 
-print('Normalizing data...')
-X_norm = normalize_dataset(X_raw)
-
-#Train
-X_train, X_test, y_train, y_test = train_test_split(
+    #Train
+    X_train, X_test, y_train, y_test = train_test_split(
         X_norm, y,
         test_size=TEST_SIZE,
         stratify=y,
         random_state=RANDOM_STATE,
     )
-print(f"Train: {len(X_train)}  |  Test: {len(X_test)}")
+    print(f"Train: {len(X_train)}  |  Test: {len(X_test)}")
 
-#Standardize (mean=0, standard deviation=1)
+    #Standardize (mean=0, standard deviation=1)
 
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
 
-#Train Classifier
+    #Train Classifier
 
-print("Training Random Forest")
-clf = RandomForestClassifier(
-    n_estimators=200,
-    max_depth=None,
-    min_samples_split=2,
-    random_state=RANDOM_STATE,
-    n_jobs=-1,
-)
-clf.fit(X_train_scaled, y_train)
+    print("Training Random Forest")
+    clf = RandomForestClassifier(
+        n_estimators=200,
+        max_depth=None,
+        min_samples_split=2,
+        random_state=RANDOM_STATE,
+        n_jobs=-1,
+    )
+    clf.fit(X_train_scaled, y_train)
 
-#Evaluate
-y_pred = clf.predict(X_test_scaled)
-acc = accuracy_score(y_test, y_pred)
+    #Evaluate
+    y_pred = clf.predict(X_test_scaled)
+    acc = accuracy_score(y_test, y_pred)
 
-print(f"Test accuracy: {acc:.4f}\n")
-print("Classification report:")
-target_names = [LABEL_NAMES.get(int(l), f"class_{l}")
-                for l in np.unique(y)]
-print(classification_report(y_test, y_pred, target_names=target_names))
+    print(f"Test accuracy: {acc:.4f}\n")
+    print("Classification report:")
+    target_names = [LABEL_NAMES.get(int(l), f"class_{l}")
+        for l in np.unique(y)]
+    print(classification_report(y_test, y_pred, target_names=target_names))
 
-print("Confusion matrix (rows=true, cols=pred):")
-cm = confusion_matrix(y_test, y_pred)
-print(cm)
+    print("Confusion matrix (rows=true, cols=pred):")
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
 
-#Save
+    #Save
 
-joblib.dump(clf, MODEL_PATH)
-joblib.dump(scaler, SCALER_PATH)
-joblib.dump(LABEL_NAMES, os.path.join(MODEL_DIR, "label_names.joblib"))
+    joblib.dump(clf, MODEL_PATH)
+    joblib.dump(scaler, SCALER_PATH)
+    joblib.dump(LABEL_NAMES, os.path.join(MODEL_DIR, "label_names.joblib"))
 
-print(f"Saved model     -> {MODEL_PATH}")
-print(f"Saved scaler    -> {SCALER_PATH}")
-print(f"Saved labels    -> {os.path.join(MODEL_DIR, 'label_names.joblib')}")
+    print(f"Saved model     -> {MODEL_PATH}")
+    print(f"Saved scaler    -> {SCALER_PATH}")
+    print(f"Saved labels    -> {os.path.join(MODEL_DIR, 'label_names.joblib')}")
 
 
 if __name__ == "__main__":
